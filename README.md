@@ -4,13 +4,13 @@
 Clone the project
 
 ```bash
-  git clone hhttps://github.com/AdishtJaglan/Products-Manager.git
+  git clone https://github.com/AdishtJaglan/Yelp-Camp.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd Products-Manager
+  cd Yelp-Camp
 ```
 
 Install dependencies
