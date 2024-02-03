@@ -1,19 +1,46 @@
 <% layout("layouts/boilerplate") %>
 
-    <h1>Edit Campground</h1>
+    <div class="row">
+        <h1 class="text-center">Update Campground</h1>
+        <div class="col-6 offset-3">
+            <form action="/campground/<%= findCampground._id %>?_method=PUT" method="POST">
+                <div class="mb-3">
+                    <label class="form-label" for="title">Enter Title:</label>
+                    <input class="form-control" type="text" name="title" id="title" value="<%= findCampground.title %>">
+                </div>
 
-    <form action="/campground/<%= findCampground._id %>?_method=PUT" method="POST">
-        <div>
-            <label for="title">Enter New Title:</label>
-            <input type="text" name="title" id="title" value="<%= findCampground.title %>">
+                <div class="mb-3">
+                    <label class="form-label" for="location">Enter Location:</label>
+                    <input class="form-control" type="text" name="location" id="location"
+                        value="<%= findCampground.location %>">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="image">Enter Image:</label>
+                    <input class="form-control" type="text" name="image" id="image" value="<%= findCampground.image %>">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="description">Enter Description:</label>
+                    <textarea class="form-control" type="text" name="description"
+                        id="description"><%= findCampground.description %></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="price">Enter Price:</label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="price-label">$</span>
+                        <input type="text" class="form-control" placeholder="0.00" aria-label="price"
+                            aria-describedby="price-label" name="price" id="price" value="<%= findCampground.price %>">
+                    </div>
+                </div>
+
+
+                <div class="mb-3">
+                    <button class="btn btn-info">Update Campground</button>
+                </div>
+            </form>
+
+            <a href="/campground">Home</a>
         </div>
-        <br>
-        <div>
-            <label for="location">Enter New Title:</label>
-            <input type="text" name="location" id="location" value="<%= findCampground.location %>">
-        </div>
-
-        <button>Update!</button>
-    </form>
-
-    <a href="/campground">Home</a>
+    </div>
