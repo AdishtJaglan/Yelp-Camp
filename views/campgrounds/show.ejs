@@ -8,12 +8,27 @@
 </head>
 
 <body>
-    <h1><%= campground.title %></h1>
+    <h1>
+        <%= campground.title %>
+    </h1>
 
-    <h2><%= campground.location %></h2>
-    
-    
-    
+    <h2>
+        <%= campground.location %>
+    </h2>
+
+    <form action="/campground/<%= campground._id %>?_method=DELETE" method="POST">
+        <button>Delete!</button>
+    </form>
+
+    <p>
+        <a href="/campground/<%= campground._id %>/edit">Edit</a>
+    </p>
+
+    <footer>
+        <a href="/campground/new">Create</a>
+        <br>
+        <a href="/campground">Home</a>
+    </footer>
 </body>
 
 </html>
