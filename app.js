@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 require("dotenv").config();
+const ejsMate = require("ejs-mate");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const Campground = require("./model/campground");
@@ -17,6 +18,7 @@ mongoose.connect(`mongodb://127.0.0.1:27017/${dbHost}`)
         console.log(e);
     });
 
+app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -33,12 +35,12 @@ app.get("/", (req, res) => {
 app.get("/campground", async (req, res) => {
     const campgrounds = await Campground.find({});
 
-    res.render("campgrounds/index", { campgrounds });
+    res.render("campgrounds/index", { campgrounds, head: "Campgrounds" });
 });
 
 //make a new campground
 app.get("/campground/new", (req, res) => {
-    res.render("campgrounds/new");
+    res.render("campgrounds/new", { head: "Create Campground" });
 });
 
 //create a new product
@@ -54,7 +56,7 @@ app.get("/campground/:id", async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findById(id);
 
-    res.render("campgrounds/show", { campground });
+    res.render("campgrounds/show", { campground, head: "View Campground" });
 });
 
 //update campground
@@ -62,7 +64,7 @@ app.get("/campground/:id/edit", async (req, res) => {
     const { id } = req.params;
     const findCampground = await Campground.findById(id);
 
-    res.render("campgrounds/edit", { findCampground });
+    res.render("campgrounds/edit", { findCampground, head: "Update Campground" });
 });
 
 //display updated campground
