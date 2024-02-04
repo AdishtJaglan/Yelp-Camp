@@ -3,25 +3,37 @@
     <div class="row">
         <h1 class="text-center">New Campground</h1>
         <div class="col-6 offset-3">
-            <form action="/campground" method="POST">
+            <form action="/campground" method="POST" class="needs-validation" novalidate>
                 <div class="mb-3">
                     <label class="form-label" for="title">Enter Title:</label>
-                    <input class="form-control" type="text" name="title" id="title">
+                    <input class="form-control" type="text" name="title" id="title" required>
+                    <div class="valid-feedback">
+                        Looks Good!
+                    </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label" for="location">Enter Location:</label>
-                    <input class="form-control" type="text" name="location" id="location">
+                    <input class="form-control" type="text" name="location" id="location" required>
+                    <div class="valid-feedback">
+                        Looks Good!
+                    </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label" for="image">Enter Image:</label>
-                    <input class="form-control" type="text" name="image" id="image">
+                    <input class="form-control" type="text" name="image" id="image" required>
+                    <div class="valid-feedback">
+                        Looks Good!
+                    </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label" for="description">Enter Description:</label>
-                    <textarea class="form-control" type="text" name="description" id="description"></textarea>
+                    <textarea class="form-control" type="text" name="description" id="description" required></textarea>
+                    <div class="valid-feedback">
+                        Looks Good!
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -29,7 +41,10 @@
                     <div class="input-group">
                         <span class="input-group-text" id="price-label">$</span>
                         <input type="text" class="form-control" placeholder="0.00" aria-label="price"
-                            aria-describedby="price-label" name="price" id="price">
+                            aria-describedby="price-label" name="price" id="price" required>
+                        <div class="valid-feedback">
+                            Looks Good!
+                        </div>
                     </div>
                 </div>
 
