@@ -4,6 +4,7 @@ require("dotenv").config();
 const ejsMate = require("ejs-mate");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
+const { campgroundSchema } = require("./schemas.js");
 const asyncError = require("./utility/asyncError");
 const ExpressError = require("./utility/expressError");
 const Campground = require("./model/campground");
@@ -28,6 +29,17 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
+const validateCampground = (req, res, next) => {
+    const { error } = campgroundSchema.validate(req.body);
+
+    if (error) {
+        const msg = error.details.map(el => el.message).join(",");
+        throw new ExpressError(msg, 400);
+    } else {
+        next();
+    }
+}
+
 app.get("/", (req, res) => {
     console.log("Working!");
     res.render("home");
@@ -46,9 +58,8 @@ app.get("/campground/new", (req, res) => {
 });
 
 //create a new product
-app.post("/campground", asyncError(async (req, res, next) => {
-    if (!req.body.campground) throw new ExpressError("Invalid Campground Data", 400);
-    const newCampground = new Campground(req.body);
+app.post("/campground", validateCampground, asyncError(async (req, res, next) => {
+    const newCampground = new Campground(req.body.campground);
     await newCampground.save();
 
     res.redirect(`/campground/${newCampground._id}`);
@@ -71,9 +82,9 @@ app.get("/campground/:id/edit", asyncError(async (req, res) => {
 }));
 
 //display updated campground
-app.put("/campground/:id", asyncError(async (req, res) => {
+app.put("/campground/:id", validateCampground, asyncError(async (req, res) => {
     const { id } = req.params;
-    const campground = await Campground.findByIdAndUpdate(id, req.body, { runValidators: true, new: true });
+    const campground = await Campground.findByIdAndUpdate(id, req.body.campground, { runValidators: true, new: true });
 
     res.redirect(`/campground/${campground._id}`);
 }));
