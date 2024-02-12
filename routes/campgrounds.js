@@ -4,6 +4,8 @@ const Campground = require("../model/campground");
 const asyncError = require("../utility/asyncError");
 const ExpressError = require("../utility/expressError");
 const { campgroundSchema } = require("../schemas.js");
+const passport = require("passport");
+const { isLoggedIn } = require("../middleware.js");
 
 const validateCampground = (req, res, next) => {
     const { error } = campgroundSchema.validate(req.body);
@@ -24,12 +26,12 @@ router.get("/", asyncError(async (req, res) => {
 }));
 
 //make a new campground
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
     res.render("campgrounds/new", { head: "Create Campground" });
 });
 
-//create a new product
-router.post("/", validateCampground, asyncError(async (req, res, next) => {
+//create a new campground
+router.post("/", isLoggedIn, validateCampground, asyncError(async (req, res, next) => {
     const newCampground = new Campground(req.body.campground);
     await newCampground.save();
 
@@ -51,7 +53,7 @@ router.get("/:id", asyncError(async (req, res) => {
 }));
 
 //update campground
-router.get("/:id/edit", asyncError(async (req, res) => {
+router.get("/:id/edit", isLoggedIn, asyncError(async (req, res) => {
     const { id } = req.params;
     const findCampground = await Campground.findById(id);
 
@@ -64,7 +66,7 @@ router.get("/:id/edit", asyncError(async (req, res) => {
 }));
 
 //display updated campground
-router.put("/:id", validateCampground, asyncError(async (req, res) => {
+router.put("/:id", isLoggedIn, validateCampground, asyncError(async (req, res) => {
     const { id } = req.params;
     const campground = await Campground.findByIdAndUpdate(id, req.body.campground, { runValidators: true, new: true });
 
@@ -73,7 +75,7 @@ router.put("/:id", validateCampground, asyncError(async (req, res) => {
 }));
 
 //deleting a campground
-router.delete("/:id", asyncError(async (req, res) => {
+router.delete("/:id", isLoggedIn, asyncError(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
 

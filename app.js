@@ -7,9 +7,13 @@ const methodOverride = require("method-override");
 const ExpressError = require("./utility/expressError");
 const session = require("express-session");
 const flash = require("connect-flash");
+const passport = require("passport");
+const passportLocal = require("passport-local");
+const User = require("./model/user.js");
 
-const campgrounds = require("./routes/campgrounds.js");
-const reviews = require("./routes/reviews.js");
+const campgroundRoutes = require("./routes/campgrounds.js");
+const reviewRoutes = require("./routes/reviews.js");
+const userRoutes = require("./routes/users.js");
 
 const app = express();
 const dbHost = process.env.DB_HOST;
@@ -43,16 +47,27 @@ app.use(flash());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
+
+//passsport middleware
+app.use(passport.initialize());
+app.use(passport.session()); //should always be below session configs
+
+passport.use(new passportLocal(User.authenticate())); //authenticating User model
+passport.serializeUser(User.serializeUser()); //how to store User
+passport.deserializeUser(User.deserializeUser()); //how "unstore" User
+
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
-    
+    res.locals.currentUser = req.user; //checking to see if user is logged in, should always be after serialize and deserialize user 
+
     next();
 })
 
 //setting up express router
-app.use("/campground", campgrounds);
-app.use("/campground/:id/reviews", reviews);
+app.use("/campground", campgroundRoutes);
+app.use("/campground/:id/reviews", reviewRoutes);
+app.use("/", userRoutes);
 
 //default
 app.get("/", (req, res) => {
