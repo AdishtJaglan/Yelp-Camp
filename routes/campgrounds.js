@@ -1,23 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const Campground = require("../model/campground");
 const asyncError = require("../utility/asyncError");
-const { isLoggedIn, validateCampground } = require("../middleware.js");
+const { isLoggedIn, validateCampground, isAuthor } = require("../middleware.js");
 const campground = require("../controllers/campgrounds.js");
-
-const isAuthor = async (req, res, next) => {
-    const { id } = req.params;
-    const campground = await Campground.findById(id);
-    if (!campground.author.equals(req.user._id)) {
-        req.flash("error", "You do not have permission to do that!");
-        return res.redirect(`/campground/${id}`);
-    }
-    next();
-}
+const multer = require("multer");
+const storage = require("../cloudinary");
+const upload = multer({ storage });
 
 router.route("/")
     .get(asyncError(campground.index)) //listing campgrounds
-    .post(isLoggedIn, validateCampground, asyncError(campground.createCampground)); //create a new campground
+    .post(isLoggedIn, upload.single("image"), validateCampground, asyncError(campground.createCampground)); //create a new campground
 
 //make a new campground
 router.get("/new", isLoggedIn, campground.newForm);
