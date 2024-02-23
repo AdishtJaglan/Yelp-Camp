@@ -19,20 +19,19 @@ module.exports.newForm = (req, res) => {
 //create a new campground
 module.exports.createCampground = async (req, res, next) => {
     const geoData = await geocoder.forwardGeocode({
-        query: 'Yosemite, CA',
+        query: req.body.campground.location,
         limit: 1
     }).send()
 
-    console.log(geoData);
-    res.send("OK!");
-    // const newCampground = new Campground(req.body.campground);
-    // newCampground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
-    // newCampground.author = req.user._id;
+    const newCampground = new Campground(req.body.campground);
+    newCampground.geometry = geoData.body.features[0].geometry;
+    newCampground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    newCampground.author = req.user._id;
 
-    // await newCampground.save();
+    await newCampground.save();
 
-    // req.flash("success", "Successfully Made a New Campground");
-    // res.redirect(`/campground/${newCampground._id}`);
+    req.flash("success", "Successfully Made a New Campground");
+    res.redirect(`/campground/${newCampground._id}`);
 }
 
 //view a campground
