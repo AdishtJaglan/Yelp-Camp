@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Review = require("./review");
-const { number } = require("joi");
 const Schema = mongoose.Schema;
+const opts = { toJSON: { virtuals: true } };
 
 const ImageSchema = new Schema({
     url: String,
@@ -39,7 +39,15 @@ const CampgroundSchema = new Schema({
             ref: "Review",
         }
     ]
-});
+}, opts);
+
+//cluster map pin virtual
+CampgroundSchema.virtual("properties.popUpText").get(function () {
+    return `
+    <a href="/campground/${this._id}">${this.title}</a>
+    <p>${this.description.substring(0, 20)}...</p>
+    `;
+})
 
 //query middleware
 CampgroundSchema.post("findOneAndDelete", async function (doc) {
