@@ -75,7 +75,7 @@ app.use("/", userRoutes);
 //default
 app.get("/", (req, res) => {
     console.log("Working!");
-    res.send("Yelp-Camp");
+    res.render("campgrounds/home");
 });
 
 //handling invalid routes
