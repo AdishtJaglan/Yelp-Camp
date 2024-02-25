@@ -15,6 +15,8 @@ const passportLocal = require("passport-local");
 const User = require("./model/user.js");
 const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
+// const mongoAtlas = process.env.MONGO_ATLAS;
+const MongoStore = require('connect-mongo');
 
 const campgroundRoutes = require("./routes/campgrounds.js");
 const reviewRoutes = require("./routes/reviews.js");
@@ -22,7 +24,18 @@ const userRoutes = require("./routes/users.js");
 
 const app = express();
 const dbHost = process.env.DB_HOST;
+const dbUrl = `mongodb://127.0.0.1:27017/${dbHost}`;
+
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: 'thisshouldbeabettersecret!'
+    }
+});
+
 const configSessions = {
+    store,
     name: "session",
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -35,7 +48,7 @@ const configSessions = {
     },
 }
 
-mongoose.connect(`mongodb://127.0.0.1:27017/${dbHost}`)
+mongoose.connect(dbUrl)
     .then(() => {
         console.log("Database is connected");
     })
