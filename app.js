@@ -15,7 +15,6 @@ const passportLocal = require("passport-local");
 const User = require("./model/user.js");
 const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
-// const mongoAtlas = process.env.MONGO_ATLAS;
 const MongoStore = require('connect-mongo');
 
 const campgroundRoutes = require("./routes/campgrounds.js");
@@ -24,7 +23,7 @@ const userRoutes = require("./routes/users.js");
 
 const app = express();
 const dbHost = process.env.DB_HOST;
-const dbUrl = `mongodb://127.0.0.1:27017/${dbHost}`;
+const dbUrl = process.env.MONGO_ATLAS || `mongodb://127.0.0.1:27017/${dbHost}`;
 
 const store = MongoStore.create({
     mongoUrl: dbUrl,
